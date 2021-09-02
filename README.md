@@ -1,5 +1,5 @@
 # **Slackr**
-Slackr is a clone of the Slack messaging app for business.
+Slackr is a clone of the Slack messaging app for business', made simple for University colleagues.
 
 <p align="center">
   <img width="700" src="images/homepage.png" alt="homepage"/>
