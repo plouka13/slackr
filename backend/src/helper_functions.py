@@ -20,7 +20,7 @@ def get_data():
     Returns:
         data (dicionary of lists): Contains all slackr information
     '''
-    if os.path.exists(DATA_FILE) is True:
+    if os.path.exists(DATA_FILE) is True and os.path.getsize(DATA_FILE) > 0:
         data = pickle.load(open(DATA_FILE, "rb"))
     else:
         data = {
