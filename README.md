@@ -8,9 +8,9 @@ Slackr is a clone of the Slack messaging app for business.
 ## **Getting Started**
 ### **Installation**
 To run the frontend be in the frontend directory and run:
-```
-frontend $ npm install
-frontend $ sh run.sh [BACKEND PORT] [FRONTEND PORT]
+```bash
+npm install
+sh run.sh [BACKEND_PORT] [FRONTEND_PORT]
 ```
 
 Ensure all python dependencies are installed before running the server.
@@ -22,8 +22,8 @@ Ensure all python dependencies are installed before running the server.
 
 To run the server, be in the backend directory and run:
 
-```
-backend $ python3 server.py [BACKEND PORT]
+```bash
+python3 server.py [BACKEND PORT]
 ```
 ### **Usage**
 Open server domain in a browser http://localhost:8080.
