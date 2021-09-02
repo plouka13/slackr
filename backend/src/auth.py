@@ -69,7 +69,7 @@ def auth_login(email, password):
             if password == profile['password']:
 
                 u_id = profile['u_id']
-                token = jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
+                token = jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256')
 
                 # Add token and u_id dict to logged_in list
                 data['logged_in'].append({'token': token, 'u_id': u_id})
