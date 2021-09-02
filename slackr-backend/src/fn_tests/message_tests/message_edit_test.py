@@ -1,0 +1,119 @@
+import pytest
+from error import InputError, AccessError
+from auth import auth_register
+from channels import channels_create
+from channel import channel_join, channel_messages
+from message import message_send, message_edit
+
+# Success Tests
+def test_edit_success(register_one):
+    u_id, token = register_one
+
+    channel_id = channels_create(token, 'channel1', True)['channel_id']
+
+    message_id = message_send(token, channel_id, 'Hello World')['message_id']
+    message_edit(token, message_id, 'Hi Mars')
+    
+    channel_message = channel_messages(token, channel_id, 0)['messages'][0] #gets first dictionary in list of dictionary-messages
+    
+    assert channel_message['message_id'] == message_id
+    assert channel_message['message'] == 'Hi Mars'
+
+def test_edit_success_twice(register_one):
+    u_id, token = register_one
+
+    channel_id = channels_create(token, 'channel1', True)['channel_id']
+
+    message_id = message_send(token, channel_id, 'Hello World')['message_id']
+    
+    message_edit(token, message_id, 'Hi Mars')
+    channel_message = channel_messages(token, channel_id, 0)['messages'][0] #gets first dictionary in list of dictionary-messages
+    
+    assert channel_message['message_id'] == message_id
+    assert channel_message['message'] == 'Hi Mars'
+
+    message_edit(token, message_id, 'Hey Saturn')
+    channel_message2 = channel_messages(token, channel_id, 0)['messages'][0] #gets first dictionary in list of dictionary-messages
+    
+    assert channel_message2['message_id'] == message_id
+    assert channel_message2['message'] == 'Hey Saturn'
+
+def test_edit_success_channel_owner(register_three):
+    users = register_three
+    u_id1, token1 = users[0]['u_id'], users[0]['token']
+    u_id2, token2 = users[1]['u_id'], users[1]['token']
+    u_id3, token3 = users[2]['u_id'], users[2]['token']
+
+    
+    channel_id = channels_create(token2, 'channel1', True)['channel_id']
+    channel_join(token3, channel_id)
+
+    message_id = message_send(token3, channel_id, 'Hello World')['message_id']
+    
+    message_edit(token2, message_id, 'Hi Mars')
+    channel_message = channel_messages(token2, channel_id, 0)['messages'][0] #gets first dictionary in list of dictionary-messages
+    
+    assert channel_message['message_id'] == message_id
+    assert channel_message['message'] == 'Hi Mars'
+
+def test_edit_success_slackr_owner(register_two):
+    user1, user2 = register_two
+    u_id1, token1 = user1['u_id'], user1['token']
+    u_id2, token2 = user2['u_id'], user2['token']
+    
+    channel_id = channels_create(token2, 'channel1', True)['channel_id']
+    channel_join(token1, channel_id)
+
+    message_id = message_send(token2, channel_id, 'Hello World')['message_id']
+    
+    message_edit(token1, message_id, 'Hi Mars')
+    channel_message = channel_messages(token2, channel_id, 0)['messages'][0] #gets first dictionary in list of dictionary-messages
+    
+    assert channel_message['message_id'] == message_id
+    assert channel_message['message'] == 'Hi Mars'
+
+def test_edit_success_delete_message(register_one):
+    u_id, token = register_one
+
+    channel_id = channels_create(token, 'channel1', True)['channel_id']
+    
+    message_id = message_send(token, channel_id, 'Hello World')['message_id']
+    message_edit(token, message_id, '')
+
+    assert channel_messages(token, channel_id, 0)['messages'] == [] #empty list of messages because of deletion
+
+# Error Tests
+def test_redit_failure_not_channel_owner(register_two):
+    user1, user2 = register_two
+    u_id1, token1 = user1['u_id'], user1['token']
+    u_id2, token2 = user2['u_id'], user2['token']
+    
+    channel_id = channels_create(token1, 'channel1', True)['channel_id']
+    channel_join(token2, channel_id)
+
+    message_id = message_send(token1, channel_id, 'Hello World')['message_id']
+    with pytest.raises(AccessError):
+        message_edit(token2, message_id, 'Hi Mars')
+
+def test_edit_failure_not_tokens_message(register_three):
+    users = register_three
+    u_id1, token1 = users[0]['u_id'], users[0]['token']
+    u_id2, token2 = users[1]['u_id'], users[1]['token']
+    u_id3, token3 = users[2]['u_id'], users[2]['token']
+
+    channel_id = channels_create(token1, 'channel1', True)['channel_id']
+    channel_join(token2, channel_id)
+    channel_join(token3, channel_id)
+
+    message_id = message_send(token2, channel_id, 'Hello World')['message_id']
+    with pytest.raises(AccessError):
+        message_edit(token3, message_id, 'Hi Mars')
+
+def test_remove_invalid_token(register_one):
+    u_id, token = register_one
+    
+    channel_id = channels_create(token, 'channel1', True)['channel_id']
+    
+    message_id = message_send(token, channel_id, 'Hello World')['message_id']
+    with pytest.raises(AccessError):
+        message_edit('', message_id, 'Hi Mars')
