@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "slackr"
+version = "0.1.0"
+description = "Slack clone"
+authors = ["Peter Louka <p.louka13@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Flask = "^2.0.1"
+Flask-Cors = "^3.0.10"
+PyJWT = "^2.1.0"
+Pillow = "^8.3.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
