@@ -192,7 +192,7 @@ def auth_register(email, password, name_first, name_last):
                           'profile_img_url': ''
                          })
 
-    token = jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256').decode('utf-8')
+    token = jwt.encode({'u_id': u_id}, SECRET, algorithm='HS256')
 
     # Add token and u_id dict to logged_in list
     data['logged_in'].append({'token': token,
