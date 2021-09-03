@@ -34,7 +34,7 @@ You will be greeted with the login page.
 
 Once you sign up you will need to login to go to the landing page.
 
-Once there you will be able to make new channels, join existing ones, send messages to your collegues and edit your profile.
+Once there you will be able to make new channels, join existing ones, send messages to your colleagues and edit your profile.
 
 ## **Contact**
 Peter Louka
